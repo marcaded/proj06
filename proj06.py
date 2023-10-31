@@ -142,7 +142,7 @@ def calculate_average_word_count(data_dict):
     for singer, l in averages_dict_unclean.items():
         clean[singer] = l/ song_count
         print(song_count)
-    print(clean)
+    return clean
         
 
                     
@@ -152,7 +152,15 @@ def calculate_average_word_count(data_dict):
 
 def find_singers_vocab(data_dict):
     ''' DocStrings goes here.'''
-    pass
+    vocab = {}
+    for singer in data_dict:
+        if singer not in vocab:
+            vocab[singer] = set()
+            for song in data_dict[singer]:
+                for lyric in data_dict[singer][song]:
+                    if lyric not in vocab[singer]:
+                        vocab[singer].add(lyric)
+    return vocab
 
 def display_singers(combined_list):
     ''' DocStrings goes here.'''
@@ -165,7 +173,13 @@ def display_singers(combined_list):
 
 def search_songs(data_dict, words):
     ''' Comment goes here.''' 
-    pass
+    search_query = []
+    for singer in data_dict:
+        for song in data_dict[singer]:
+            if words.issubset(data_dict[singer][song]):
+                q = (singer, song)
+                search_query.append(q)
+    return search_query
 
 def main():
     while True:
