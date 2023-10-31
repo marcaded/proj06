@@ -13,5 +13,6 @@ for singer in d:
             d2[singer].update({song:set(d[singer][song])})
             
 
+songs = [('Adele', "Can't Let Go"), ('Bob Dylan', 'A Satisfied Mind')]
 
-print(d2)
+print(len(songs[0]))

@@ -141,7 +141,6 @@ def calculate_average_word_count(data_dict):
                         averages_dict_unclean[singers] += song_count
     for singer, l in averages_dict_unclean.items():
         clean[singer] = l/ song_count
-        print(song_count)
     return clean
         
 
@@ -167,8 +166,12 @@ def display_singers(combined_list):
 
     print("\n{:^80s}".format("Singers by Average Word Count (TOP - 10)"))
     print("{:<20s}{:>20s}{:>20s}{:>20s}".format("Singer","Average Word Count", "Vocabulary Size", "Number of Songs"))
-    '-' * 80
-    pass
+    print('-' * 80)
+    # This function sorts the list by average word count in descending order. If two tuples have the same average, it
+    # sorts them by the vocabulary size, again in descending order. If two tuples have the same average and same
+    # vocabulary size, keep the same order as it appears in the combined_list list.
+    for i in combined_list:
+        print("{:<20s}{:>20s}{:>20s}{:>20s}".format(i[0],i[1],i[2],i[3]))
 
 
 def search_songs(data_dict, words):
@@ -200,18 +203,46 @@ def main():
         
         if songdata_fp != None:
             break
-    singer_info_dictionary = read_data(songdata_fp, stopwords)
-    info_summary = calculate_average_word_count(singer_info_dictionary)
     
     
-    
-    # "\nSearch Lyrics by Words"
+    data_dict = read_data(songdata_fp, stopwords)
+    avg_word_count = calculate_average_word_count(data_dict)
+    vocab = find_singers_vocab(data_dict)
 
+ # # (singer name, average word count, number of songs, vocabulary size)
+    display_singers_list = []
+    iterated_song = {}
+    number_of_songs = {}
+    for singer in data_dict:
+        if singer not in number_of_songs:
+            number_of_songs[singer] = 0
+            iterated_song[singer] = ''
+            for song in data_dict[singer]:
+                if song not in iterated_song[singer]:
+                    iterated_song[singer] = song
+                    number_of_songs[singer] += 1
+        
+            
+        singer_info = singer, str(round(avg_word_count[singer], 2)), str(len(vocab[singer])), str(number_of_songs[singer])
+        display_singers_list.append(singer_info)
 
-    # "\nInput a set of words (space separated), press enter to exit: "
-    # '\nError in words!'
-    # "\nThere are {} songs containing the given words!"
-    # "{:<20s} {:<s}"
+    display_singers(display_singers_list)
+    print("\nSearch Lyrics by Words")
+    
+    while True:
+        try:
+            words_set = set(input("\nInput a set of words (space separated), press enter to exit: ").lower())
+            vocab = search_songs(data_dict, words_set)
+            print("\nThere are {} songs containing the given words!".format(len(vocab)))
+            print("{:<20s} {:<s}".format("Singer", "Song"))
+            for ele in vocab:
+                print("{:<20s} {:<s}".format(ele[0], ele[1]))
+            if words_set != None or words_set == '':
+                break
+                
+        except ValueError:
+            print('\nError in words!')
+            words_set = set(input("\nInput a set of words (space separated), press enter to exit: "))
     
 if __name__ == '__main__':
     main()           
