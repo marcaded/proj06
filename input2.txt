@@ -1,0 +1,5 @@
+stopwords.txt
+songdata_small.csv
+love hate like
+war peace
+

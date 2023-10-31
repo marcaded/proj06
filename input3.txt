@@ -1,0 +1,7 @@
+stopwords.txt
+songdata_small.csv
+I love programming
+love programming
+LoVe
+roads man walk
+
